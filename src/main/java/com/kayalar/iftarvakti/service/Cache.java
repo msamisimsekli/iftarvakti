@@ -9,10 +9,13 @@ import com.kayalar.iftarvakti.model.DayInfo;
 public class Cache {
 
 	// (K,V) -> (sehir ismi, günlere göre vakit bilgi mapi)
-	Map<String, Map<String, DayInfo>> cache;
+	private Map<String, Map<String, DayInfo>> cache;
+
+	private int numberOfItems;
 
 	public Cache() {
 		cache = new HashMap<String, Map<String, DayInfo>>();
+		numberOfItems = 0;
 	}
 
 	public DayInfo getIfExists(String cityName, int day, int month, int year) {
@@ -35,7 +38,15 @@ public class Cache {
 			dayInfoMap.put(dayId, dayInfo);
 		}
 
+		int prevSize = cache.get(cityName).size();
 		cache.put(cityName, dayInfoMap);
+		int afterSize = cache.get(cityName).size();
+
+		numberOfItems += (afterSize - prevSize);
+	}
+
+	public int size() {
+		return numberOfItems;
 	}
 
 	public void clear() {
