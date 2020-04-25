@@ -2,6 +2,10 @@ package com.kayalar.iftarvakti.model;
 
 public class DayInfo {
 
+	private int day;
+	private int month;
+	private int year;
+
 	private int imsakHour;
 	private int sabahHour;
 	private int ogleHour;
@@ -16,8 +20,12 @@ public class DayInfo {
 	private int aksamMinute;
 	private int yatsiMinute;
 
-	public DayInfo(int imsakHour, int sabahHour, int ogleHour, int ikindiHour, int aksamHour, int yatsiHour,
-			int imsakMinute, int sabahMinute, int ogleMinute, int ikindiMinute, int aksamMinute, int yatsiMinute) {
+	public DayInfo(int day, int month, int year, int imsakHour, int sabahHour, int ogleHour, int ikindiHour,
+			int aksamHour, int yatsiHour, int imsakMinute, int sabahMinute, int ogleMinute, int ikindiMinute,
+			int aksamMinute, int yatsiMinute) {
+		this.day = day;
+		this.month = month;
+		this.year = year;
 		this.imsakHour = imsakHour;
 		this.sabahHour = sabahHour;
 		this.ogleHour = ogleHour;
@@ -128,12 +136,36 @@ public class DayInfo {
 		this.yatsiMinute = yatsiMinute;
 	}
 
+	public int getDay() {
+		return day;
+	}
+
+	public void setDay(int day) {
+		this.day = day;
+	}
+
+	public int getMonth() {
+		return month;
+	}
+
+	public void setMonth(int month) {
+		this.month = month;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
 	@Override
 	public String toString() {
-		return "DayInfo [imsakHour=" + imsakHour + ", sabahHour=" + sabahHour + ", ogleHour=" + ogleHour
-				+ ", ikindiHour=" + ikindiHour + ", aksamHour=" + aksamHour + ", yatsiHour=" + yatsiHour
-				+ ", imsakMinute=" + imsakMinute + ", sabahMinute=" + sabahMinute + ", ogleMinute=" + ogleMinute
-				+ ", ikindiMinute=" + ikindiMinute + ", aksamMinute=" + aksamMinute + ", yatsiMinute=" + yatsiMinute
-				+ "]";
+		return "DayInfo [day=" + day + ", month=" + month + ", year=" + year + ", imsakHour=" + imsakHour
+				+ ", sabahHour=" + sabahHour + ", ogleHour=" + ogleHour + ", ikindiHour=" + ikindiHour + ", aksamHour="
+				+ aksamHour + ", yatsiHour=" + yatsiHour + ", imsakMinute=" + imsakMinute + ", sabahMinute="
+				+ sabahMinute + ", ogleMinute=" + ogleMinute + ", ikindiMinute=" + ikindiMinute + ", aksamMinute="
+				+ aksamMinute + ", yatsiMinute=" + yatsiMinute + "]";
 	}
 }
