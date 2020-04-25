@@ -2,6 +2,8 @@ package com.kayalar.iftarvakti.requester;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
@@ -14,29 +16,31 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kayalar.iftarvakti.model.DayInfo;
 
 public class Requester {
 
-	CloseableHttpClient httpClient;
-	JsonParser jsonParser;
+	private CloseableHttpClient httpClient;
+	private JsonParser jsonParser;
+
+	private static final String apiAdress = "http://hocaokudumu.com/namazsaatiliste";
+	private static final String ulke = "TURKIYE";
+	private static final String format = "json";
 
 	public Requester() {
 		httpClient = HttpClients.createDefault();
 		jsonParser = new JsonParser();
 	}
 
-	public DayInfo request(String sehir, String tarih)
+	public List<DayInfo> requestForList(String sehir)
 			throws ClientProtocolException, IOException, URISyntaxException, HttpException, NumberFormatException {
 
-		String ulke = "TURKIYE";
-		String format = "json";
-
-		URIBuilder builder = new URIBuilder("http://hocaokudumu.com/namazsaati");
-		builder.setParameter("Ulke", ulke).setParameter("Sehir", sehir).setParameter("Tarih", tarih)
-				.setParameter("format", format);
+		URIBuilder builder = new URIBuilder(apiAdress);
+		builder.setParameter("Ulke", ulke).setParameter("Sehir", sehir).setParameter("format", format);
 
 		HttpGet request = new HttpGet(builder.build());
 
@@ -44,6 +48,7 @@ public class Requester {
 		request.addHeader(HttpHeaders.USER_AGENT, "Googlebot");
 
 		try (CloseableHttpResponse response = httpClient.execute(request)) {
+			System.out.println(response.getStatusLine().toString());
 			if (response.getStatusLine().getStatusCode() != 200) {
 				throw new HttpException("Response was not successfull");
 			}
@@ -56,37 +61,44 @@ public class Requester {
 				throw new HttpException("Response entitiy was null");
 			}
 
-			// return it as a String
-			String result = EntityUtils.toString(entity);
-			JsonObject json = jsonParser.parse(result).getAsJsonObject();
+			List<DayInfo> result = new ArrayList<DayInfo>();
+			JsonArray jsonArray = jsonParser.parse(EntityUtils.toString(entity)).getAsJsonArray();
 
-			System.out.println(result);
+			for (JsonElement jsonElement : jsonArray) {
+				JsonObject json = jsonElement.getAsJsonObject();
 
-			String imsak = json.get("Imsak").getAsString();
-			String sabah = json.get("Gunes").getAsString();
-			String ogle = json.get("Oglen").getAsString();
-			String ikindi = json.get("Ikindi").getAsString();
-			String aksam = json.get("Aksam").getAsString();
-			String yatsi = json.get("Yatsi").getAsString();
+				String imsak = json.get("Imsak").getAsString();
+				String sabah = json.get("Gunes").getAsString();
+				String ogle = json.get("Oglen").getAsString();
+				String ikindi = json.get("Ikindi").getAsString();
+				String aksam = json.get("Aksam").getAsString();
+				String yatsi = json.get("Yatsi").getAsString();
+				String gun = json.get("Gun").getAsString();
 
-			int imsakHour = Integer.parseInt(imsak.substring(0, 2));
-			int sabahHour = Integer.parseInt(sabah.substring(0, 2));
-			int ogleHour = Integer.parseInt(ogle.substring(0, 2));
-			int ikindiHour = Integer.parseInt(ikindi.substring(0, 2));
-			int aksamHour = Integer.parseInt(aksam.substring(0, 2));
-			int yatsiHour = Integer.parseInt(yatsi.substring(0, 2));
+				int day = Integer.parseInt(gun.substring(0, 2));
+				int month = Integer.parseInt(gun.substring(3, 5));
+				int year = Integer.parseInt(gun.substring(6));
 
-			int imsakMinute = Integer.parseInt(imsak.substring(4));
-			int sabahMinute = Integer.parseInt(sabah.substring(4));
-			int ogleMinute = Integer.parseInt(ogle.substring(4));
-			int ikindiMinute = Integer.parseInt(ikindi.substring(4));
-			int aksamMinute = Integer.parseInt(aksam.substring(4));
-			int yatsiMinute = Integer.parseInt(yatsi.substring(4));
+				int imsakHour = Integer.parseInt(imsak.substring(0, 2));
+				int sabahHour = Integer.parseInt(sabah.substring(0, 2));
+				int ogleHour = Integer.parseInt(ogle.substring(0, 2));
+				int ikindiHour = Integer.parseInt(ikindi.substring(0, 2));
+				int aksamHour = Integer.parseInt(aksam.substring(0, 2));
+				int yatsiHour = Integer.parseInt(yatsi.substring(0, 2));
 
-			DayInfo dayInfo = new DayInfo(imsakHour, sabahHour, ogleHour, ikindiHour, aksamHour, yatsiHour, imsakMinute,
-					sabahMinute, ogleMinute, ikindiMinute, aksamMinute, yatsiMinute);
+				int imsakMinute = Integer.parseInt(imsak.substring(3));
+				int sabahMinute = Integer.parseInt(sabah.substring(3));
+				int ogleMinute = Integer.parseInt(ogle.substring(3));
+				int ikindiMinute = Integer.parseInt(ikindi.substring(3));
+				int aksamMinute = Integer.parseInt(aksam.substring(3));
+				int yatsiMinute = Integer.parseInt(yatsi.substring(3));
 
-			return dayInfo;
+				result.add(new DayInfo(day, month, year, imsakHour, sabahHour, ogleHour, ikindiHour, aksamHour,
+						yatsiHour, imsakMinute, sabahMinute, ogleMinute, ikindiMinute, aksamMinute, yatsiMinute));
+
+			}
+
+			return result;
 		}
 	}
 }
