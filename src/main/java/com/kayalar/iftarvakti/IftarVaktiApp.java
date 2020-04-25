@@ -1,6 +1,5 @@
 package com.kayalar.iftarvakti;
 
-import com.kayalar.iftarvakti.model.RemainingTime;
 import com.kayalar.iftarvakti.service.IftarVaktiService;
 
 public class IftarVaktiApp {
@@ -8,7 +7,7 @@ public class IftarVaktiApp {
 	public static void main(String[] args) {
 		IftarVaktiService service = new IftarVaktiService();
 
-		RemainingTime rt = service.askForCity("ISTANBUL");
+		String rt = service.askForCity("İSTANBUL");
 
 		System.out.println(rt);
 	}
