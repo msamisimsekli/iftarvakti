@@ -15,6 +15,7 @@ public class IftarVaktiService {
 
 	private Cache cache;
 	private Requester requester;
+	private static final String errorMessage = "Beklenmeyen sonuç. Daha sonra tekrar deneyiniz.";
 
 	private static final int CACHE_MAX = 10_000;
 
@@ -53,7 +54,7 @@ public class IftarVaktiService {
 
 				// at least today and tomorrow is required
 				if (dayInfoList.size() < 2)
-					return null;
+					return errorMessage;
 
 				cache.save(cityName, dayInfoList);
 
@@ -92,7 +93,7 @@ public class IftarVaktiService {
 					pivot.getHour(), pivot.getMinute());
 		} catch (NumberFormatException | IOException | URISyntaxException | HttpException e) {
 			e.printStackTrace();
-			return "Beklenmeyen sonuç. Daha sonra tekrar deneyiniz.";
+			return errorMessage;
 		}
 	}
 
