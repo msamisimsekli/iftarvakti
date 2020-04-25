@@ -38,7 +38,10 @@ public class Cache {
 			dayInfoMap.put(dayId, dayInfo);
 		}
 
-		int prevSize = cache.get(cityName).size();
+		int prevSize = 0;
+		if (cache.get(cityName) != null)
+			prevSize = cache.get(cityName).size();
+
 		cache.put(cityName, dayInfoMap);
 		int afterSize = cache.get(cityName).size();
 
