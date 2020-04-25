@@ -6,14 +6,17 @@ import java.net.URISyntaxException;
 import org.apache.http.HttpException;
 import org.apache.http.client.ClientProtocolException;
 
-import com.kayalar.iftarvakti.requester.Requester;
+import com.kayalar.iftarvakti.model.RemainingTime;
+import com.kayalar.iftarvakti.service.IftarVaktiService;
 
 public class IftarVaktiApp {
 
 	public static void main(String[] args)
 			throws NumberFormatException, ClientProtocolException, IOException, URISyntaxException, HttpException {
-		Requester requester = new Requester();
+		IftarVaktiService service = new IftarVaktiService();
 
-		System.out.println(requester.request("ANKARA", "25.04.2020"));
+		RemainingTime rt = service.askForCity("ISTANBUL");
+
+		System.out.println(rt);
 	}
 }
