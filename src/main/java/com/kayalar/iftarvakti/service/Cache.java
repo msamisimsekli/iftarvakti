@@ -54,6 +54,14 @@ public class Cache {
 	}
 
 	private String convertToDayId(int day, int month, int year) {
-		return day + "" + month + "" + year;
+		String dayStr = day + "";
+		if (day < 10)
+			dayStr = "0" + dayStr;
+
+		String monthStr = month + "";
+		if (month < 10)
+			monthStr = "0" + monthStr;
+
+		return dayStr + monthStr + year;
 	}
 }
