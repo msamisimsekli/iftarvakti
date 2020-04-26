@@ -108,9 +108,9 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 
 	public String checkCity(String cityName) {
 		cityName = cityName.toLowerCase();
-		System.err.println(cityName + " " + cityName.length());
 		double maxScore = 0;
 		String maxCity = "";
+
 		for (String city : cities) {
 			city = city.toLowerCase();
 
@@ -121,8 +121,6 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 			if (score > maxScore) {
 				maxScore = score;
 				maxCity = city;
-
-				System.out.println(String.format("Max score changed to %s for city=%s", maxScore, maxCity));
 			}
 		}
 
