@@ -5,10 +5,10 @@ import java.net.URISyntaxException;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
 
 import org.apache.http.HttpException;
 
+import com.kayalar.iftarvakti.config.Configurations;
 import com.kayalar.iftarvakti.model.DayInfo;
 import com.kayalar.iftarvakti.requester.Requester;
 
@@ -18,11 +18,9 @@ public class IftarVaktiService {
 	private Requester requester;
 	private static final String errorMessage = "Beklenmeyen sonuç. Daha sonra tekrar deneyiniz.";
 
-	private static final int CACHE_MAX = 10_000;
-
-	public IftarVaktiService() {
-		cache = new Cache();
-		requester = new Requester();
+	public IftarVaktiService(Configurations config) {
+		cache = new Cache(config);
+		requester = new Requester(config);
 	}
 
 	public String askForCity(String cityName) {
@@ -31,10 +29,6 @@ public class IftarVaktiService {
 			// Time of now
 			ZonedDateTime now = ZonedDateTime.now();
 
-			int day = now.getDayOfMonth();
-			int month = now.getMonthValue();
-			int year = now.getYear();
-
 			// Tomorrow
 			ZonedDateTime tomorrow = now.plusDays(1);
 
@@ -42,25 +36,19 @@ public class IftarVaktiService {
 			int tomorrowMonth = tomorrow.getMonthValue();
 			int tomorrowYear = tomorrow.getYear();
 
-			DayInfo todayInfo = cache.getIfExists(cityName, day, month, year);
-			DayInfo tomorrowInfo = cache.getIfExists(cityName, tomorrowDay, tomorrowMonth, tomorrowYear);
+			DayInfo todayInfo = cache.getIfExists(cityName);
 
 			if (todayInfo == null) {
 
-				if (cache.size() >= CACHE_MAX) {
-					cache.clear();
-				}
-
-				List<DayInfo> dayInfoList = requester.requestForList(cityName);
+				DayInfo dayInfo = requester.requestForList(cityName);
 
 				// at least today and tomorrow is required
-				if (dayInfoList.size() < 2)
+				if (dayInfo == null)
 					return errorMessage;
 
-				cache.save(cityName, dayInfoList);
+				cache.save(cityName, dayInfo);
 
-				todayInfo = dayInfoList.get(0);
-				tomorrowInfo = dayInfoList.get(1);
+				todayInfo = dayInfo;
 			}
 
 			String zoneId = "Europe/Istanbul";
@@ -70,9 +58,10 @@ public class IftarVaktiService {
 			ZonedDateTime todayIftar = ZonedDateTime.of(todayInfo.getYear(), todayInfo.getMonth(), todayInfo.getDay(),
 					todayInfo.getAksamHour(), todayInfo.getAksamMinute(), 0, 0, ZoneId.of(zoneId));
 
-			ZonedDateTime tomorrowImsak = ZonedDateTime.of(tomorrowInfo.getYear(), tomorrowInfo.getMonth(),
-					tomorrowInfo.getDay(), tomorrowInfo.getImsakHour(), tomorrowInfo.getImsakMinute(), 0, 0,
-					ZoneId.of(zoneId));
+			// bir kac dakikadan bisey olmaz. bugunku imsaka bakalım :)
+			// yarinki bu api de verilmiyor
+			ZonedDateTime tomorrowImsak = ZonedDateTime.of(tomorrowYear, tomorrowMonth, tomorrowDay,
+					todayInfo.getImsakHour(), todayInfo.getImsakMinute(), 0, 0, ZoneId.of(zoneId));
 
 			String remainingTimetype;
 			int remainingHour, remainingMinute, remainingSecond;
@@ -99,6 +88,10 @@ public class IftarVaktiService {
 			e.printStackTrace();
 			return errorMessage;
 		}
+	}
+
+	public Cache getCache() {
+		return cache;
 	}
 
 	private String handSomeResultString(String type, int hour, int minute, int second, int pivotHour, int pivotMinute) {

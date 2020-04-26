@@ -18,21 +18,41 @@ import net.ricecode.similarity.StringSimilarityServiceImpl;
 
 public class IftarVaktiBot extends TelegramLongPollingBot {
 
-	private List<String> cities = Arrays.asList(new String[] { "ADANA", "ADIYAMAN", "AFYON", "AĞRI", "AMASYA", "ANKARA",
-			"ANTALYA", "ARTVİN", "AYDIN", "BALIKESİR", "BİLECİK", "BİNGOL", "BİTLİS", "BOLU", "BURDUR", "BURSA",
-			"ÇANAKKALE", "ÇANKIRI", "ÇORUM", "DENİZLİ", "DİYARBAKIR", "EDİRNE", "ELAZIĞ", "ERZİNCAN", "ERZURUM",
-			"ESKİSEHİR", "GAZİANTEP", "GİRESUN", "GÜMÜŞHANE", "HAKKARİ", "HATAY", "ISPARTA", "MERSİN", "İSTANBUL",
-			"İZMİR", "KARS", "KASTAMONU", "KAYSERİ", "KIRKLARELİ", "KIRŞEHİR", "KOCAELİ", "KONYA", "KÜTAHYA", "MALATYA",
-			"MANİSA", "KAHRAMANMARAŞ", "MARDİN", "MUĞLA", "MUŞ", "NEVŞEHİR", "NİĞDE", "ORDU", "RİZE", "SAKARYA",
-			"SAMSUN", "SİİRT", "SİNOP", "SİVAS", "TEKİRDAĞ", "TOKAT", "TRABZON", "TUNCELİ", "ŞANLIURFA", "UŞAK", "VAN",
-			"YOZGAT", "ZONGULDAK", "AKSARAY", "BAYBURT", "KARAMAN", "KIRIKKALE", "BATMAN", "ŞIRNAK", "BARTIN",
-			"ARDAHAN", "IĞDIR", "YALOVA", "KARABÜK", "KİLİS", "OSMANİYE", "DÜZCE" });
+//	private List<String> citiesUpperCase = Arrays.asList(new String[] { "ADANA", "ADIYAMAN", "AFYON", "AĞRI", "AMASYA",
+//			"ANKARA", "ANTALYA", "ARTVİN", "AYDIN", "BALIKESİR", "BİLECİK", "BİNGOL", "BİTLİS", "BOLU", "BURDUR",
+//			"BURSA", "ÇANAKKALE", "ÇANKIRI", "ÇORUM", "DENİZLİ", "DİYARBAKIR", "EDİRNE", "ELAZIĞ", "ERZİNCAN",
+//			"ERZURUM", "ESKİSEHİR", "GAZİANTEP", "GİRESUN", "GÜMÜŞHANE", "HAKKARİ", "HATAY", "ISPARTA", "MERSİN",
+//			"İSTANBUL", "İZMİR", "KARS", "KASTAMONU", "KAYSERİ", "KIRKLARELİ", "KIRŞEHİR", "KOCAELİ", "KONYA",
+//			"KÜTAHYA", "MALATYA", "MANİSA", "KAHRAMANMARAŞ", "MARDİN", "MUĞLA", "MUŞ", "NEVŞEHİR", "NİĞDE", "ORDU",
+//			"RİZE", "SAKARYA", "SAMSUN", "SİİRT", "SİNOP", "SİVAS", "TEKİRDAĞ", "TOKAT", "TRABZON", "TUNCELİ",
+//			"ŞANLIURFA", "UŞAK", "VAN", "YOZGAT", "ZONGULDAK", "AKSARAY", "BAYBURT", "KARAMAN", "KIRIKKALE", "BATMAN",
+//			"ŞIRNAK", "BARTIN", "ARDAHAN", "IĞDIR", "YALOVA", "KARABÜK", "KİLİS", "OSMANİYE", "DÜZCE" });
+
+//	private List<String> citiesLowerCase = Arrays.asList(new String[] { "adana", "adıyaman", "afyonkarahisar", "ağrı",
+//			"amasya", "ankara", "antalya", "artvin", "aydın", "balıkesir", "bilecik", "bingöl", "bitlis", "bolu",
+//			"burdur", "bursa", "çanakkale", "çankırı", "çorum", "denizli", "diyarbakır", "edirne", "elazığ", "erzincan",
+//			"erzurum", "eskişehir", "gaziantep", "giresun", "gümüşhane", "hakkari", "hatay", "ısparta", "mersin",
+//			"istanbul", "izmir", "kars", "kastamonu", "kayseri", "kırklareli", "kırşehir", "kocaeli", "konya",
+//			"kütahya", "malatya", "manisa", "kahramanmaraş", "mardin", "muğla", "muş", "nevşehir", "niğde", "ordu",
+//			"rize", "sakarya", "samsun", "siirt", "sinop", "sivas", "tekirdağ", "tokat", "trabzon", "tunceli",
+//			"şanlıurfa", "uşak", "van", "yozgat", "zonguldak", "aksaray", "bayburt", "karaman", "kırıkkale", "batman",
+//			"şırnak", "bartın", "ardahan", "ığdır", "yalova", "karabük", "kilis", "osmaniye", "düzce" });
+
+	private List<String> cities = Arrays.asList(new String[] { "ADANA", "ADIYAMAN", "AFYON", "AGRI", "AMASYA", "ANKARA",
+			"ANTALYA", "ARTVIN", "AYDIN", "BALIKESIR", "BILECIK", "BINGOL", "BITLIS", "BOLU", "BURDUR", "BURSA",
+			"CANAKKALE", "CANKIRI", "CORUM", "DENIZLI", "DIYARBAKIR", "EDIRNE", "ELAZIG", "ERZINCAN", "ERZURUM",
+			"ESKISEHIR", "GAZIANTEP", "GIRESUN", "GUMUSHANE", "HAKKARI", "HATAY", "ISPARTA", "ICEL", "ISTANBUL",
+			"IZMIR", "KARS", "KASTAMONU", "KAYSERI", "KIRKLARELI", "KIRSEHIR", "KOCAELI", "KONYA", "KUTAHYA", "MALATYA",
+			"MANISA", "KAHRAMANMARAS", "MARDIN", "MUGLA", "MUS", "NEVSEHIR", "NIGDE", "ORDU", "RIZE", "SAKARYA",
+			"SAMSUN", "SIIRT", "SINOP", "SIVAS", "TEKIRDAG", "TOKAT", "TRABZON", "TUNCELI", "SANLIURFA", "USAK", "VAN",
+			"YOZGAT", "ZONGULDAK", "AKSARAY", "BAYBURT", "KARAMAN", "KIRIKKALE", "BATMAN", "SIRNAK", "BARTIN",
+			"ARDAHAN", "IGDIR", "YALOVA", "KARABUK", "KILIS", "OSMANIYE", "DUZCE" });
 
 	IftarVaktiService service;
 	Configurations config;
 
 	public IftarVaktiBot(Configurations config) {
-		service = new IftarVaktiService();
+		service = new IftarVaktiService(config);
 		this.config = config;
 	}
 
@@ -67,7 +87,7 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 
 		if (cityName != null) {
 			System.out.println(cityName);
-			reply = cityName + "\n" + service.askForCity(cityName);
+			reply = cityName.toUpperCase() + "\n" + service.askForCity(cityName);
 		} else {
 			reply = command + " isimli şehir bulunamadı.";
 		}
@@ -87,18 +107,29 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 	}
 
 	public String checkCity(String cityName) {
+		cityName = cityName.toLowerCase();
+		System.err.println(cityName + " " + cityName.length());
+		double maxScore = 0;
+		String maxCity = "";
 		for (String city : cities) {
-			String cityNameUp = cityName.toUpperCase();
+			city = city.toLowerCase();
 
 			SimilarityStrategy strategy = new JaroWinklerStrategy();
 			StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
-			double score = service.score(city, cityNameUp);
+			double score = service.score(city, cityName);
 
-			if (city.length() == cityNameUp.length() && score > 0.75) {
-				System.out.println(String.format("Score=%s", score));
-				return city;
+			if (score > maxScore) {
+				maxScore = score;
+				maxCity = city;
+
+				System.out.println(String.format("Max score changed to %s for city=%s", maxScore, maxCity));
 			}
 		}
+
+		System.out.println(maxScore);
+		if (maxScore > 0.59)
+			return maxCity;
+
 		return null;
 	}
 

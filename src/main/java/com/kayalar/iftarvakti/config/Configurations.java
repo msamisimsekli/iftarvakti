@@ -7,6 +7,9 @@ public class Configurations {
 	private String dbName;
 	private String dbAdress;
 	private int dbPort;
+	private String cityCacheName;
+	private String apiAddress;
+	private String apiToken;
 
 	public String getBotToken() {
 		return botToken;
@@ -46,5 +49,29 @@ public class Configurations {
 
 	public void setDbPort(int dbPort) {
 		this.dbPort = dbPort;
+	}
+
+	public String getCityCacheName() {
+		return this.cityCacheName;
+	}
+
+	public void setCityCacheName(String cityCacheName) {
+		this.cityCacheName = cityCacheName;
+	}
+
+	public String getApiAddress() {
+		return apiAddress;
+	}
+
+	public void setApiAddress(String apiAddress) {
+		this.apiAddress = apiAddress;
+	}
+
+	public String getApiToken() {
+		return apiToken;
+	}
+
+	public void setApiToken(String apiToken) {
+		this.apiToken = apiToken;
 	}
 }

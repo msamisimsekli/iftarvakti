@@ -1,70 +1,29 @@
 package com.kayalar.iftarvakti.service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import com.kayalar.iftarvakti.config.Configurations;
 import com.kayalar.iftarvakti.model.DayInfo;
 
 public class Cache {
 
-	// (K,V) -> (sehir ismi, günlere göre vakit bilgi mapi)
-	private Map<String, Map<String, DayInfo>> cache;
+	// (K,V) -> (sehir ismi, vakit bilgileri)
+	private Map<String, DayInfo> cache;
 
-	private int numberOfItems;
-
-	public Cache() {
-		cache = new HashMap<String, Map<String, DayInfo>>();
-		numberOfItems = 0;
+	public Cache(Configurations config) {
+		cache = new HashMap<String, DayInfo>();
 	}
 
-	public DayInfo getIfExists(String cityName, int day, int month, int year) {
-		if (!cache.containsKey(cityName))
-			return null;
-
-		String dayId = convertToDayId(day, month, year);
-
-		if (!cache.get(cityName).containsKey(dayId))
-			return null;
-
-		return cache.get(cityName).get(dayId);
+	public DayInfo getIfExists(String cityName) {
+		return cache.get(cityName);
 	}
 
-	public void save(String cityName, List<DayInfo> dayInfoList) {
-		Map<String, DayInfo> dayInfoMap = new HashMap<String, DayInfo>();
-
-		for (DayInfo dayInfo : dayInfoList) {
-			String dayId = convertToDayId(dayInfo.getDay(), dayInfo.getMonth(), dayInfo.getYear());
-			dayInfoMap.put(dayId, dayInfo);
-		}
-
-		int prevSize = 0;
-		if (cache.get(cityName) != null)
-			prevSize = cache.get(cityName).size();
-
-		cache.put(cityName, dayInfoMap);
-		int afterSize = cache.get(cityName).size();
-
-		numberOfItems += (afterSize - prevSize);
-	}
-
-	public int size() {
-		return numberOfItems;
+	public void save(String cityName, DayInfo dayInfo) {
+		cache.put(cityName, dayInfo);
 	}
 
 	public void clear() {
-		cache = new HashMap<String, Map<String, DayInfo>>();
-	}
-
-	private String convertToDayId(int day, int month, int year) {
-		String dayStr = day + "";
-		if (day < 10)
-			dayStr = "0" + dayStr;
-
-		String monthStr = month + "";
-		if (month < 10)
-			monthStr = "0" + monthStr;
-
-		return dayStr + monthStr + year;
+		cache = new HashMap<String, DayInfo>();
 	}
 }
