@@ -26,6 +26,9 @@ public class ConfigurationReader {
 
 		config.setBotToken(prop.getProperty("bot.token"));
 		config.setBotUserId(prop.getProperty("bot.user.id"));
+		config.setDbAdress(prop.getProperty("db.address"));
+		config.setDbName(prop.getProperty("db.name"));
+		config.setDbPort(Integer.parseInt(prop.getProperty("db.port")));
 
 		inputStream.close();
 
