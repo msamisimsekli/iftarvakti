@@ -1,31 +1,30 @@
 package com.kayalar.iftarvakti;
 
-import com.kayalar.iftarvakti.service.IftarVaktiService;
-import com.kayalar.iftarvakti.telegram.IftarVaktiBot;
+import java.io.IOException;
+
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.kayalar.iftarvakti.config.ConfigurationReader;
+import com.kayalar.iftarvakti.config.Configurations;
+import com.kayalar.iftarvakti.telegram.IftarVaktiBot;
+
 public class IftarVaktiApp {
 
 	public static void main(String[] args) {
-		IftarVaktiService service = new IftarVaktiService();
-
-		ApiContextInitializer.init();
-
-		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 
 		try {
-			telegramBotsApi.registerBot(new IftarVaktiBot());
+			Configurations config = new ConfigurationReader().getPropValues();
 
-		} catch (
-				TelegramApiException e) {
+			ApiContextInitializer.init();
+
+			TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
+			telegramBotsApi.registerBot(new IftarVaktiBot(config));
+
+		} catch (TelegramApiException | IOException e) {
 			e.printStackTrace();
 		}
-
-		String rt = service.askForCity("İSTANBUL");
-
-		System.out.println(rt);
 	}
 
 }

@@ -1,5 +1,6 @@
 package com.kayalar.iftarvakti.telegram;
 
+import com.kayalar.iftarvakti.config.Configurations;
 import com.kayalar.iftarvakti.service.IftarVaktiService;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -20,7 +21,14 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 			"SAMSUN", "SİİRT", "SİNOP", "SİVAS", "TEKİRDAĞ", "TOKAT", "TRABZON", "TUNCELİ", "ŞANLIURFA", "UŞAK", "VAN",
 			"YOZGAT", "ZONGULDAK", "AKSARAY", "BAYBURT", "KARAMAN", "KIRIKKALE", "BATMAN", "ŞIRNAK", "BARTIN",
 			"ARDAHAN", "IĞDIR", "YALOVA", "KARABÜK", "KİLİS", "OSMANİYE", "DÜZCE" });
-	IftarVaktiService service = new IftarVaktiService();
+
+	IftarVaktiService service;
+	Configurations config;
+
+	public IftarVaktiBot(Configurations config) {
+		service = new IftarVaktiService();
+		this.config = config;
+	}
 
 	public void onUpdateReceived(Update update) {
 
@@ -91,11 +99,13 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 		return ret;
 	}
 
+	@Override
 	public String getBotUsername() {
-		return "";
+		return config.getBotUserId();
 	}
 
+	@Override
 	public String getBotToken() {
-		return "";
+		return config.getBotToken();
 	}
 }
