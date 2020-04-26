@@ -71,7 +71,7 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 		// TODO: Commandlist db conf olup cache'de tutulacak
 		if (command.equals("/start")) {
 
-			message.setText("Hoşgeldiniz! /help yazarak bot hakkında bilgi alabilirsiniz.");
+			message.setText("Hoşgeldiniz! /yardım yazarak bot hakkında bilgi alabilirsiniz.");
 			return;
 		}
 
@@ -81,18 +81,21 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 			return;
 		}
 
-		String reply;
+		else {
 
-		String cityName = checkCity(command);
+			String reply;
 
-		if (cityName != null) {
-			System.out.println(cityName);
-			reply = cityName.toUpperCase() + "\n" + service.askForCity(cityName);
-		} else {
-			reply = command + " isimli şehir bulunamadı.";
+			String cityName = checkCity(command);
+
+			if (cityName != null) {
+				System.out.println(cityName);
+				reply = cityName.toUpperCase() + "\n" + service.askForCity(cityName);
+			} else {
+				reply = command + " isimli şehir bulunamadı.";
+			}
+
+			message.setText(reply);
 		}
-
-		message.setText(reply);
 
 		System.out.println(update.toString());
 		message.setChatId(update.getMessage().getChatId());
@@ -108,6 +111,13 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 
 	public String checkCity(String cityName) {
 		cityName = cityName.toLowerCase();
+
+		cityName = cityName.replace('ı', 'i');
+		cityName = cityName.replace('ü', 'u');
+		cityName = cityName.replace('ö', 'o');
+		cityName = cityName.replace('ç', 'c');
+		cityName = cityName.replace('ş', 's');
+		cityName = cityName.replace('ğ', 'g');
 		double maxScore = 0;
 		String maxCity = "";
 
@@ -125,7 +135,7 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 		}
 
 		System.out.println(maxScore);
-		if (maxScore > 0.59)
+		if (maxScore > 0.90)
 			return maxCity;
 
 		return null;
