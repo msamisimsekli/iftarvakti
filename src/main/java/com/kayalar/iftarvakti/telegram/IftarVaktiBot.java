@@ -1,14 +1,20 @@
 package com.kayalar.iftarvakti.telegram;
 
-import com.kayalar.iftarvakti.config.Configurations;
-import com.kayalar.iftarvakti.service.IftarVaktiService;
+import java.util.Arrays;
+import java.util.List;
+
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.Arrays;
-import java.util.List;
+import com.kayalar.iftarvakti.config.Configurations;
+import com.kayalar.iftarvakti.service.IftarVaktiService;
+
+import net.ricecode.similarity.JaroWinklerStrategy;
+import net.ricecode.similarity.SimilarityStrategy;
+import net.ricecode.similarity.StringSimilarityService;
+import net.ricecode.similarity.StringSimilarityServiceImpl;
 
 public class IftarVaktiBot extends TelegramLongPollingBot {
 
@@ -55,11 +61,13 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 			return;
 		}
 
-		String cityName = command.toUpperCase();
 		String reply;
 
-		if (checkCity(command.toUpperCase())) {
-			reply = service.askForCity(cityName);
+		String cityName = checkCity(command);
+
+		if (cityName != null) {
+			System.out.println(cityName);
+			reply = cityName + "\n" + service.askForCity(cityName);
 		} else {
 			reply = command + " isimli şehir bulunamadı.";
 		}
@@ -78,17 +86,20 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 		}
 	}
 
-	public boolean checkCity(String cityName) {
+	public String checkCity(String cityName) {
 		for (String city : cities) {
+			String cityNameUp = cityName.toUpperCase();
 
-			String cityNameEn = cityName.toUpperCase();
+			SimilarityStrategy strategy = new JaroWinklerStrategy();
+			StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
+			double score = service.score(city, cityNameUp);
 
-			if (cityNameEn.equals(city)) {
-				return true;
+			if (city.length() == cityNameUp.length() && score > 0.75) {
+				System.out.println(String.format("Score=%s", score));
+				return city;
 			}
 		}
-
-		return false;
+		return null;
 	}
 
 	// https://gist.github.com/onuryilmaz/6034569

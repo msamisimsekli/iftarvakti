@@ -123,6 +123,6 @@ public class IftarVaktiService {
 			pivotStr += "0";
 		pivotStr += pivotMinute;
 
-		return String.format("%s için kalan süre: %s\n%s vakti: %s", type, remainingStr, type, pivotStr);
+		return String.format("%s için kalan süre:\n%s\n%s vakti: %s", type, remainingStr, type, pivotStr);
 	}
 }
