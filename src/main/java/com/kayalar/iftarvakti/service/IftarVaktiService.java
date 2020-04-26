@@ -3,7 +3,8 @@ package com.kayalar.iftarvakti.service;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.apache.http.HttpException;
@@ -28,14 +29,14 @@ public class IftarVaktiService {
 
 		try {
 			// Time of now
-			LocalDateTime now = LocalDateTime.now();
+			ZonedDateTime now = ZonedDateTime.now();
 
 			int day = now.getDayOfMonth();
 			int month = now.getMonthValue();
 			int year = now.getYear();
 
 			// Tomorrow
-			LocalDateTime tomorrow = now.plusDays(1);
+			ZonedDateTime tomorrow = now.plusDays(1);
 
 			int tomorrowDay = tomorrow.getDayOfMonth();
 			int tomorrowMonth = tomorrow.getMonthValue();
@@ -62,17 +63,20 @@ public class IftarVaktiService {
 				tomorrowInfo = dayInfoList.get(1);
 			}
 
-			LocalDateTime todayImsak = LocalDateTime.of(todayInfo.getYear(), todayInfo.getMonth(), todayInfo.getDay(),
-					todayInfo.getImsakHour(), todayInfo.getImsakMinute());
-			LocalDateTime todayIftar = LocalDateTime.of(todayInfo.getYear(), todayInfo.getMonth(), todayInfo.getDay(),
-					todayInfo.getAksamHour(), todayInfo.getAksamMinute());
+			String zoneId = "Europe/Istanbul";
 
-			LocalDateTime tomorrowImsak = LocalDateTime.of(tomorrowInfo.getYear(), tomorrowInfo.getMonth(),
-					tomorrowInfo.getDay(), tomorrowInfo.getImsakHour(), tomorrowInfo.getImsakMinute());
+			ZonedDateTime todayImsak = ZonedDateTime.of(todayInfo.getYear(), todayInfo.getMonth(), todayInfo.getDay(),
+					todayInfo.getImsakHour(), todayInfo.getImsakMinute(), 0, 0, ZoneId.of(zoneId));
+			ZonedDateTime todayIftar = ZonedDateTime.of(todayInfo.getYear(), todayInfo.getMonth(), todayInfo.getDay(),
+					todayInfo.getAksamHour(), todayInfo.getAksamMinute(), 0, 0, ZoneId.of(zoneId));
+
+			ZonedDateTime tomorrowImsak = ZonedDateTime.of(tomorrowInfo.getYear(), tomorrowInfo.getMonth(),
+					tomorrowInfo.getDay(), tomorrowInfo.getImsakHour(), tomorrowInfo.getImsakMinute(), 0, 0,
+					ZoneId.of(zoneId));
 
 			String remainingTimetype;
 			int remainingHour, remainingMinute, remainingSecond;
-			LocalDateTime pivot;
+			ZonedDateTime pivot;
 
 			if (now.isAfter(todayImsak) && now.isBefore(todayIftar)) {
 				remainingTimetype = "İftar";
