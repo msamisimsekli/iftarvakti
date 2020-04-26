@@ -40,50 +40,55 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 
 		SendMessage message = new SendMessage();
 
-		System.out.println(update.getMessage().getFrom().getUserName() + " : " + command);
+		System.out.println(String.format("User=%s sent command=%s", update.getMessage().getFrom().getId(), command));
 
 		// TODO: Commandlist db conf olup cache'de tutulacak
 		if (command.equals("/start")) {
 
 			message.setText("Hoşgeldiniz! /help yazarak bot hakkında bilgi alabilirsiniz.");
+			return;
 		}
 
-		else if (command.equals("/help")) {
+		if (command.equals("/help")) {
 
-			message.setText("İftar bilgisi öğrenmek istediğiniz şehrin adını yazıp gönderebilirsiniz. Ör:Ankara");
+			message.setText("İftar bilgisini öğrenmek istediğiniz şehrin adını yazıp gönderebilirsiniz. Ör:Ankara");
+			return;
+		}
+
+		String cityName = command.toUpperCase();
+		String reply;
+
+		if (checkCity(command.toUpperCase())) {
+			reply = service.askForCity(cityName);
 		} else {
-
-			System.out.println(checkCity(command));
-
-			String reply = service.askForCity(checkCity(command));
-
-			message.setText(checkCity(reply));
-
+			reply = command + " isimli şehir bulunamadı.";
 		}
+
+		message.setText(reply);
 
 		System.out.println(update.toString());
 		message.setChatId(update.getMessage().getChatId());
 
-		try {
+		try
+
+		{
 			execute(message);
 		} catch (TelegramApiException e) {
 			e.printStackTrace();
 		}
-
 	}
 
-	public String checkCity(String cityName) {
+	public boolean checkCity(String cityName) {
 		for (String city : cities) {
 
-			String cityNameEn = clearTurkishChars(cityName.toUpperCase());
+			String cityNameEn = cityName.toUpperCase();
 
 			if (cityNameEn.equals(city)) {
-				System.out.println(cityNameEn);
-				return cityNameEn;
+				return true;
 			}
 		}
 
-		return cityName + " isimli şehir bulunamadı.";
+		return false;
 	}
 
 	// https://gist.github.com/onuryilmaz/6034569
