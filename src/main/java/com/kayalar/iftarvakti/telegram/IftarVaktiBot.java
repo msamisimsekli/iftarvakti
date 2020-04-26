@@ -3,6 +3,7 @@ package com.kayalar.iftarvakti.telegram;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -112,12 +113,7 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 	public String checkCity(String cityName) {
 		cityName = cityName.toLowerCase();
 
-		cityName = cityName.replace('ı', 'i');
-		cityName = cityName.replace('ü', 'u');
-		cityName = cityName.replace('ö', 'o');
-		cityName = cityName.replace('ç', 'c');
-		cityName = cityName.replace('ş', 's');
-		cityName = cityName.replace('ğ', 'g');
+		String clearedCityName = clearTurkishChars(cityName);
 		double maxScore = 0;
 		String maxCity = "";
 
@@ -126,7 +122,7 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 
 			SimilarityStrategy strategy = new JaroWinklerStrategy();
 			StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
-			double score = service.score(city, cityName);
+			double score = service.score(city, clearedCityName);
 
 			if (score > maxScore) {
 				maxScore = score;
