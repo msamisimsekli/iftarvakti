@@ -1,2 +1,6 @@
 /bin/
 /target/
+/.idea/
+/.metadata/
+/.settings/
+/IftarVakti.iml
