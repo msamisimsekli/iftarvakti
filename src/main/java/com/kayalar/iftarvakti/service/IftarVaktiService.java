@@ -102,13 +102,13 @@ public class IftarVaktiService {
 		String remainingStr = "";
 
 		if (hour != 0)
-			remainingStr += (hour + " saat");
+			remainingStr += (hour + " saat ");
 
 		if (minute != 0)
-			remainingStr += (", " + minute + " dakika");
+			remainingStr += (minute + " dakika ");
 
 		if (second != 0)
-			remainingStr += (", " + second + " saniye");
+			remainingStr += (second + " saniye");
 
 		String pivotStr = "";
 
