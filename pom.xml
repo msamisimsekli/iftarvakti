@@ -7,6 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>IftarVakti</name>
 	<description>IftarVakti App for opening time for Ramadan Fasting</description>
+	<packaging>jar</packaging>
 	<build>
 		<plugins>
 			<plugin>
@@ -17,6 +18,21 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
+
+			<!-- Make this jar executable -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<!-- Jar file entry point -->
+							<mainClass>com.kayalar.iftarVakti.IftarVaktiApp</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
