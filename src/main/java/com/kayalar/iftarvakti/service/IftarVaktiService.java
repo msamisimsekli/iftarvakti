@@ -19,7 +19,7 @@ public class IftarVaktiService {
 	private static final String errorMessage = "Beklenmeyen sonuç. Daha sonra tekrar deneyiniz.";
 
 	public IftarVaktiService(Configurations config) {
-		cache = new Cache(config);
+		cache = new Cache();
 		requester = new Requester(config);
 	}
 
@@ -117,5 +117,10 @@ public class IftarVaktiService {
 		pivotStr += pivotMinute;
 
 		return String.format("%s için kalan süre:\n%s\n%s vakti: %s", type, remainingStr, type, pivotStr);
+	}
+
+	public void saveCache() {
+		cache.saveCache();
+		cache = new Cache();
 	}
 }

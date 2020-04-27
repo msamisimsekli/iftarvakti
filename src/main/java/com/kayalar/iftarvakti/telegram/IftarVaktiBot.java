@@ -129,13 +129,12 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 
 	public String checkCity(String cityName) {
 		cityName = cityName.toLowerCase();
-		System.out.println(cityName);
 		String clearedCityName = clearTurkishChars(cityName);
 		double maxScore = 0;
 		String maxCity = "";
 
 		for (String city : cities) {
-			city = city.toLowerCase();
+			city = clearTurkishChars(city.toLowerCase());
 
 			SimilarityStrategy strategy = new JaroWinklerStrategy();
 			StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
@@ -175,5 +174,10 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 	@Override
 	public String getBotToken() {
 		return config.getBotToken();
+	}
+
+	public void saveData() {
+		userManagement.saveMap();
+		service.saveCache();
 	}
 }

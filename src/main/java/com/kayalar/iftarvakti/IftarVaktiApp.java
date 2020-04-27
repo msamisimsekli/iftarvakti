@@ -1,6 +1,8 @@
 package com.kayalar.iftarvakti;
 
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -15,16 +17,28 @@ public class IftarVaktiApp {
 	public static void main(String[] args) {
 
 		try {
-			Configurations config = new ConfigurationReader().getPropValues();
 
 			ApiContextInitializer.init();
 
+			Configurations config = new ConfigurationReader().getPropValues();
+			IftarVaktiBot bot = new IftarVaktiBot(config);
+
 			TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
-			telegramBotsApi.registerBot(new IftarVaktiBot(config));
+			telegramBotsApi.registerBot(bot);
+
+			Timer t = new Timer();
+			// This task is scheduled to run every 10 seconds
+
+			t.scheduleAtFixedRate(new TimerTask() {
+
+				@Override
+				public void run() {
+					bot.saveData();
+				}
+			}, 0, 1000 * 60 * 10); // each 10 minute, save data
 
 		} catch (TelegramApiException | IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 }
