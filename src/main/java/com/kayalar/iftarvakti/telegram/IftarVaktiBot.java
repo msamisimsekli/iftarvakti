@@ -20,15 +20,15 @@ import net.ricecode.similarity.StringSimilarityServiceImpl;
 
 public class IftarVaktiBot extends TelegramLongPollingBot {
 
-	private List<String> cities = Arrays.asList(new String[] { "ADANA", "ADIYAMAN", "AFYON", "AGRI", "AMASYA", "ANKARA",
-			"ANTALYA", "ARTVIN", "AYDIN", "BALIKESIR", "BILECIK", "BINGOL", "BITLIS", "BOLU", "BURDUR", "BURSA",
-			"CANAKKALE", "CANKIRI", "CORUM", "DENIZLI", "DIYARBAKIR", "EDIRNE", "ELAZIG", "ERZINCAN", "ERZURUM",
-			"ESKISEHIR", "GAZIANTEP", "GIRESUN", "GUMUSHANE", "HAKKARI", "HATAY", "ISPARTA", "ICEL", "ISTANBUL",
-			"IZMIR", "KARS", "KASTAMONU", "KAYSERI", "KIRKLARELI", "KIRSEHIR", "KOCAELI", "KONYA", "KUTAHYA", "MALATYA",
-			"MANISA", "KAHRAMANMARAS", "MARDIN", "MUGLA", "MUS", "NEVSEHIR", "NIGDE", "ORDU", "RIZE", "SAKARYA",
-			"SAMSUN", "SIIRT", "SINOP", "SIVAS", "TEKIRDAG", "TOKAT", "TRABZON", "TUNCELI", "SANLIURFA", "USAK", "VAN",
-			"YOZGAT", "ZONGULDAK", "AKSARAY", "BAYBURT", "KARAMAN", "KIRIKKALE", "BATMAN", "SIRNAK", "BARTIN",
-			"ARDAHAN", "IGDIR", "YALOVA", "KARABUK", "KILIS", "OSMANIYE", "DUZCE" });
+	private List<String> cities = Arrays.asList(new String[] { "ADANA", "ADIYAMAN", "AFYONKARAHİSAR", "AGRI", "AMASYA",
+			"ANKARA", "ANTALYA", "ARTVIN", "AYDIN", "BALIKESIR", "BILECIK", "BINGOL", "BITLIS", "BOLU", "BURDUR",
+			"BURSA", "CANAKKALE", "CANKIRI", "CORUM", "DENIZLI", "DIYARBAKIR", "EDIRNE", "ELAZIG", "ERZINCAN",
+			"ERZURUM", "ESKISEHIR", "GAZIANTEP", "GIRESUN", "GUMUSHANE", "HAKKARI", "HATAY", "ISPARTA", "ICEL",
+			"ISTANBUL", "IZMIR", "KARS", "KASTAMONU", "KAYSERI", "KIRKLARELI", "KIRSEHIR", "KOCAELI", "KONYA",
+			"KUTAHYA", "MALATYA", "MANISA", "KAHRAMANMARAS", "MARDIN", "MUGLA", "MUS", "NEVSEHIR", "NIGDE", "ORDU",
+			"RIZE", "SAKARYA", "SAMSUN", "SIIRT", "SINOP", "SIVAS", "TEKIRDAG", "TOKAT", "TRABZON", "TUNCELI",
+			"SANLIURFA", "USAK", "VAN", "YOZGAT", "ZONGULDAK", "AKSARAY", "BAYBURT", "KARAMAN", "KIRIKKALE", "BATMAN",
+			"SIRNAK", "BARTIN", "ARDAHAN", "IGDIR", "YALOVA", "KARABUK", "KILIS", "OSMANIYE", "DUZCE" });
 
 	IftarVaktiService service;
 	Configurations config;
@@ -42,16 +42,7 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 
 	public void onUpdateReceived(Update update) {
 
-		// System.out.println(update.getMessage().getText());
-		// System.out.println(update.getMessage().getDate());
-		// System.out.println(update.getMessage().getFrom());
-
-		String command = update.getMessage().getText();
-
 		SendMessage message = new SendMessage();
-
-		System.out.println(String.format("User=%s sent command=%s", update.getMessage().getFrom().getId(), command));
-
 		message.setText(responseForUpdate(update));
 		message.setChatId(update.getMessage().getChatId());
 
@@ -71,15 +62,15 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 		// TODO: Commandlist db conf olup cache'de tutulacak
 		if (command.equals("/start")) {
 
-			return "Hoşgeldiniz! /yardım yazarak bot hakkında bilgi alabilirsiniz.";
+			return "Hoşgeldiniz! /help yazarak bot hakkında bilgi alabilirsiniz.";
 		}
 
 		if (command.equals("/help")) {
 
-			String str1 = "İftar bilgisini öğrenmek istediğiniz şehrin adını ya da plaka numarasını yazıp gönderebilirsiniz. Ör:Ankara, 34 vb.";
-			String str2 = "Bulunduğunuz şehri /sehir_kaydet komutunu kullanarak kaydedebilir, sonrasında /ogren komutuyla kolayca iftar/imsak bilgisini alabilirsiniz. Ör: /sehir_kaydet istanbul";
+			String str1 = "1) İftar bilgisini öğrenmek istediğiniz şehrin adını ya da plaka numarasını yazıp gönderebilirsiniz. Ör:Ankara ya da 34 vb.";
+			String str2 = "2) Bulunduğunuz şehrin ismini ya da plaka numarasını /sehir_kaydet komutunu kullanarak kaydedebilir, sonrasında /ogren komutuyla kolayca iftar/imsak bilgisini alabilirsiniz. Ör: /sehir_kaydet istanbul\n/sehir_kaydet komutuna uzun basarak yanına sehir ismini kolaylıkla yazabilirsiniz";
 
-			String text = String.format("%s\n%s", str1, str2);
+			String text = String.format("%s\n\n%s", str1, str2);
 
 			return text;
 		}
@@ -90,7 +81,13 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 				return "Şehir ismi algılanamadı. Lütfen /sehir_kaydet komudu sonrasında boşluk bırakarak şehir ismini yazınız";
 			}
 
-			String cityName = checkCity(split[1]);
+			String cityName;
+			try {
+				cityName = checkCityId(split[1]);
+			} catch (NumberFormatException e) {
+				cityName = checkCityName(split[1]);
+			}
+
 			if (cityName == null) {
 				return command + " isimli şehir bulunamadı.";
 			}
@@ -101,7 +98,7 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 			UserInfo userInfo = new UserInfo(userId, cityName, chatId);
 			userManagement.saveUserInfo(userInfo);
 
-			return cityName + " şehir olarak sisteme kaydedildi.";
+			return clearTurkishChars(cityName.toUpperCase()) + " bulunduğunuz şehir olarak sisteme kaydedildi.";
 		}
 
 		if (command.equals("/ogren")) {
@@ -112,28 +109,35 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 				return "Henüz şehirinizi kaydetmemişsiniz. /sehir_kaydet komutu ile şehirinizi kaydedebilirsiniz. Bilgi için /help";
 
 			String cityName = userInfo.getCity();
-			return cityName.toUpperCase() + "\n" + service.askForCity(cityName);
+			return clearTurkishChars(cityName.toUpperCase()) + "\n" + service.askForCity(cityName);
 		}
 
 		// Bir şehir ismi girildiğinde burası çalışır
 
-		String cityName = checkCity(command);
+		String cityName;
+		try {
+
+			cityName = checkCityId(command);
+		} catch (NumberFormatException e) {
+			cityName = checkCityName(command);
+		}
 
 		if (cityName != null) {
 			System.out.println(cityName);
-			return cityName.toUpperCase() + "\n" + service.askForCity(cityName);
+			return clearTurkishChars(cityName.toUpperCase()) + "\n" + service.askForCity(cityName);
 		} else {
 			return command + " isimli şehir bulunamadı.";
 		}
 	}
 
-	public String checkCity(String cityName) {
+	public String checkCityName(String cityName) {
 		cityName = cityName.toLowerCase();
 		String clearedCityName = clearTurkishChars(cityName);
 		double maxScore = 0;
-		String maxCity = "";
+		int maxCityIndex = -1;
 
-		for (String city : cities) {
+		for (int i = 0; i < cities.size(); i++) {
+			String city = cities.get(i);
 			city = clearTurkishChars(city.toLowerCase());
 
 			SimilarityStrategy strategy = new JaroWinklerStrategy();
@@ -142,14 +146,20 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 
 			if (score > maxScore) {
 				maxScore = score;
-				maxCity = city;
+				maxCityIndex = i;
 			}
 		}
 
-		System.out.println(maxCity);
 		if (maxScore > 0.90)
-			return maxCity;
+			return cities.get(maxCityIndex);
 
+		return null;
+	}
+
+	public String checkCityId(String cityName) {
+		int cityId = Integer.parseInt(cityName) - 1;
+		if (0 < cityId && cityId < 82)
+			return clearTurkishChars(cities.get(cityId).toLowerCase());
 		return null;
 	}
 

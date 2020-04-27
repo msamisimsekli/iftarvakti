@@ -49,7 +49,6 @@ public class Requester {
 		request.addHeader("authorization", apiToken);
 
 		try (CloseableHttpResponse response = httpClient.execute(request)) {
-			System.out.println(response);
 			if (response.getStatusLine().getStatusCode() != 200) {
 				throw new HttpException("Response was not successfull");
 			}

@@ -46,7 +46,6 @@ public class Cache {
 
 			JsonReader reader = new JsonReader(new FileReader(filePath));
 			cache = new Gson().fromJson(reader, REVIEW_TYPE);
-			System.out.println(cache);
 		} catch (FileNotFoundException e) {
 			cache = new HashMap<String, DayInfo>();
 		}
