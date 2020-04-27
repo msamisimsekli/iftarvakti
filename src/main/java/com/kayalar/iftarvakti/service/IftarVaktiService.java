@@ -72,7 +72,11 @@ public class IftarVaktiService {
 				pivot = todayIftar;
 			} else {
 				remainingTimetype = "İmsak";
-				pivot = tomorrowImsak;
+				if (now.isBefore(todayImsak))
+					pivot = todayImsak;
+				else {
+					pivot = tomorrowImsak;
+				}
 			}
 
 			int duration = (int) Math.abs(Duration.between(pivot, now).getSeconds());
