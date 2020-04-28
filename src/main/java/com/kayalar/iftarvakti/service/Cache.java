@@ -20,6 +20,7 @@ public class Cache {
 
 	// (K,V) -> (sehir ismi, vakit bilgileri)
 	private Map<String, DayInfo> cache;
+	private String filePath;
 
 	public Cache() {
 		File file = new File("data/days");
@@ -32,7 +33,7 @@ public class Cache {
 		Date dNow = new Date();
 		SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
 		String dateStr = ft.format(dNow);
-		String filePath = String.format("data/days/%s", dateStr);
+		filePath = String.format("data/days/%s", dateStr);
 
 		file = new File(filePath);
 		if (!file.exists()) {
@@ -69,7 +70,13 @@ public class Cache {
 			Date dNow = new Date();
 			SimpleDateFormat ft = new SimpleDateFormat("yyyyMMdd");
 			String dateStr = ft.format(dNow);
-			String filePath = String.format("data/days/%s", dateStr);
+			String newFilePath = String.format("data/days/%s", dateStr);
+
+			// it means now it is a new day. do not save the cache
+			if (!newFilePath.equals(filePath)) {
+				cache = new HashMap<String, DayInfo>();
+				return;
+			}
 
 			FileWriter fileWriter = new FileWriter(filePath);
 			Gson gson = new Gson();
