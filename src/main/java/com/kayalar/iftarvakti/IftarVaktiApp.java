@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -12,9 +14,11 @@ import com.kayalar.iftarvakti.config.ConfigurationReader;
 import com.kayalar.iftarvakti.config.Configurations;
 import com.kayalar.iftarvakti.telegram.IftarVaktiBot;
 
+@SpringBootApplication
 public class IftarVaktiApp {
 
 	public static void main(String[] args) {
+		SpringApplication.run(IftarVaktiApp.class, args);
 
 		try {
 
@@ -41,4 +45,5 @@ public class IftarVaktiApp {
 			e.printStackTrace();
 		}
 	}
+
 }
