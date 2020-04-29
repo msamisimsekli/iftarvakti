@@ -1,5 +1,6 @@
 package com.kayalar.iftarvakti.telegram;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import com.kayalar.iftarvakti.config.ConfigurationReader;
 import com.kayalar.iftarvakti.config.Configurations;
 import com.kayalar.iftarvakti.service.IftarVaktiService;
 import com.kayalar.iftarvakti.user.UserInfo;
@@ -38,8 +40,8 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 
 	UserManagement userManagement;
 
-	public IftarVaktiBot(Configurations config) {
-		this.config = config;
+	public IftarVaktiBot() throws IOException {
+		this.config = new ConfigurationReader().getPropValues();
 		service = new IftarVaktiService(config);
 		userManagement = new UserManagement();
 	}

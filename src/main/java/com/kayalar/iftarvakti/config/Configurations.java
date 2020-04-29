@@ -1,7 +1,5 @@
 package com.kayalar.iftarvakti.config;
 
-import org.springframework.context.annotation.Configuration;
-
 public class Configurations {
 
 	private String botToken;

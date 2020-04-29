@@ -10,8 +10,6 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import com.kayalar.iftarvakti.config.ConfigurationReader;
-import com.kayalar.iftarvakti.config.Configurations;
 import com.kayalar.iftarvakti.telegram.IftarVaktiBot;
 
 @SpringBootApplication
@@ -21,9 +19,7 @@ public class IftarVaktiApp {
 		try {
 
 			ApiContextInitializer.init();
-			SpringApplication.run(IftarVaktiApp.class, args);
-			Configurations config = new ConfigurationReader().getPropValues();
-			IftarVaktiBot bot = new IftarVaktiBot(config);
+			IftarVaktiBot bot = new IftarVaktiBot();
 			TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 			telegramBotsApi.registerBot(bot);
 
@@ -37,6 +33,7 @@ public class IftarVaktiApp {
 					bot.saveData();
 				}
 			}, 0, 1000 * 60 * 10); // each 10 minute, save data
+			SpringApplication.run(IftarVaktiApp.class, args);
 
 		} catch (TelegramApiException | IOException e) {
 			e.printStackTrace();
