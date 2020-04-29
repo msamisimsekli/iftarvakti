@@ -18,15 +18,12 @@ import com.kayalar.iftarvakti.telegram.IftarVaktiBot;
 public class IftarVaktiApp {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IftarVaktiApp.class, args);
-
 		try {
 
 			ApiContextInitializer.init();
-
+			SpringApplication.run(IftarVaktiApp.class, args);
 			Configurations config = new ConfigurationReader().getPropValues();
 			IftarVaktiBot bot = new IftarVaktiBot(config);
-
 			TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 			telegramBotsApi.registerBot(bot);
 

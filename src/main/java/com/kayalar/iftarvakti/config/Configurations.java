@@ -1,5 +1,7 @@
 package com.kayalar.iftarvakti.config;
 
+import org.springframework.context.annotation.Configuration;
+
 public class Configurations {
 
 	private String botToken;
@@ -10,6 +12,9 @@ public class Configurations {
 	private String cityCacheName;
 	private String apiAddress;
 	private String apiToken;
+
+	public Configurations() {
+	}
 
 	public String getBotToken() {
 		return botToken;

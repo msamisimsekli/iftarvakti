@@ -3,6 +3,7 @@ package com.kayalar.iftarvakti.telegram;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -18,6 +19,7 @@ import net.ricecode.similarity.SimilarityStrategy;
 import net.ricecode.similarity.StringSimilarityService;
 import net.ricecode.similarity.StringSimilarityServiceImpl;
 
+@Component
 public class IftarVaktiBot extends TelegramLongPollingBot {
 
 	private List<String> cities = Arrays.asList(new String[] { "ADANA", "ADIYAMAN", "AFYONKARAHİSAR", "AGRI", "AMASYA",
@@ -31,7 +33,9 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 			"SIRNAK", "BARTIN", "ARDAHAN", "IGDIR", "YALOVA", "KARABUK", "KILIS", "OSMANIYE", "DUZCE" });
 
 	IftarVaktiService service;
+
 	Configurations config;
+
 	UserManagement userManagement;
 
 	public IftarVaktiBot(Configurations config) {
