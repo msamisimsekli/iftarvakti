@@ -36,7 +36,7 @@ public class Requester {
 		apiToken = config.getApiToken();
 	}
 
-	public DailyPrayTimes requestForList(String sehir)
+	public DailyPrayTimes requestForCity(String sehir)
 			throws ClientProtocolException, IOException, URISyntaxException, HttpException, NumberFormatException {
 
 		URIBuilder builder = new URIBuilder(apiAdress);

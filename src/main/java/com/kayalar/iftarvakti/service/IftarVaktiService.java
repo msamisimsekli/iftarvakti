@@ -44,7 +44,7 @@ public class IftarVaktiService {
 
 			if (todayInfo == null) {
 
-				DailyPrayTimes dayInfo = requester.requestForList(cityName);
+				DailyPrayTimes dayInfo = requester.requestForCity(cityName);
 
 				// at least today and tomorrow is required
 				if (dayInfo == null)

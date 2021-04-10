@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class ConfigurationReader {
-	String result = "";
-	InputStream inputStream;
+
+	private InputStream inputStream;
 
 	public Configurations getPropValues() throws IOException {
 
@@ -29,7 +29,6 @@ public class ConfigurationReader {
 		config.setDbAdress(prop.getProperty("db.address"));
 		config.setDbName(prop.getProperty("db.name"));
 		config.setDbPort(Integer.parseInt(prop.getProperty("db.port")));
-		config.setCityCacheName(prop.getProperty("city.cache.name"));
 		config.setApiToken(prop.getProperty("api.token"));
 		config.setApiAddress(prop.getProperty("api.address"));
 
