@@ -1,6 +1,6 @@
 package com.kayalar.iftarvakti.model;
 
-public class DayInfo {
+public class DailyPrayTimes {
 
 	private int day;
 	private int month;
@@ -20,7 +20,7 @@ public class DayInfo {
 	private int aksamMinute;
 	private int yatsiMinute;
 
-	public DayInfo(int day, int month, int year, int imsakHour, int sabahHour, int ogleHour, int ikindiHour,
+	public DailyPrayTimes(int day, int month, int year, int imsakHour, int sabahHour, int ogleHour, int ikindiHour,
 			int aksamHour, int yatsiHour, int imsakMinute, int sabahMinute, int ogleMinute, int ikindiMinute,
 			int aksamMinute, int yatsiMinute) {
 		this.day = day;

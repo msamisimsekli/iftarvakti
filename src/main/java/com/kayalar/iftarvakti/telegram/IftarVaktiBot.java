@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -12,16 +11,14 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.kayalar.iftarvakti.config.ConfigurationReader;
 import com.kayalar.iftarvakti.config.Configurations;
+import com.kayalar.iftarvakti.model.User;
 import com.kayalar.iftarvakti.service.IftarVaktiService;
-import com.kayalar.iftarvakti.user.UserInfo;
-import com.kayalar.iftarvakti.user.UserManagement;
 
 import net.ricecode.similarity.JaroWinklerStrategy;
 import net.ricecode.similarity.SimilarityStrategy;
 import net.ricecode.similarity.StringSimilarityService;
 import net.ricecode.similarity.StringSimilarityServiceImpl;
 
-@Component
 public class IftarVaktiBot extends TelegramLongPollingBot {
 
 	private List<String> cities = Arrays.asList(new String[] { "ADANA", "ADIYAMAN", "AFYONKARAHİSAR", "AGRI", "AMASYA",
@@ -34,16 +31,13 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 			"SANLIURFA", "USAK", "VAN", "YOZGAT", "ZONGULDAK", "AKSARAY", "BAYBURT", "KARAMAN", "KIRIKKALE", "BATMAN",
 			"SIRNAK", "BARTIN", "ARDAHAN", "IGDIR", "YALOVA", "KARABUK", "KILIS", "OSMANIYE", "DUZCE" });
 
-	IftarVaktiService service;
+	private IftarVaktiService service;
 
-	Configurations config;
-
-	UserManagement userManagement;
+	private Configurations config;
 
 	public IftarVaktiBot() throws IOException {
 		this.config = new ConfigurationReader().getPropValues();
 		service = new IftarVaktiService(config);
-		userManagement = new UserManagement();
 	}
 
 	public void onUpdateReceived(Update update) {
@@ -101,15 +95,15 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 			Integer userId = update.getMessage().getFrom().getId();
 			Long chatId = update.getMessage().getChatId();
 
-			UserInfo userInfo = new UserInfo(userId, cityName, chatId);
-			userManagement.saveUserInfo(userInfo);
+			User userInfo = new User(userId, cityName, chatId);
+			service.saveUser(userInfo);
 
 			return clearTurkishChars(cityName.toUpperCase()) + " bulunduğunuz şehir olarak sisteme kaydedildi.";
 		}
 
 		if (command.equals("/ogren")) {
 			Integer userId = update.getMessage().getFrom().getId();
-			UserInfo userInfo = userManagement.getUserInfo(userId);
+			User userInfo = service.getUser(userId);
 
 			if (userInfo == null)
 				return "Henüz şehirinizi kaydetmemişsiniz. /sehir_kaydet komutu ile şehirinizi kaydedebilirsiniz. Bilgi için /help";
@@ -129,7 +123,6 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 		}
 
 		if (cityName != null) {
-			System.out.println(cityName);
 			return clearTurkishChars(cityName.toUpperCase()) + "\n" + service.askForCity(cityName);
 		} else {
 			return command + " isimli şehir bulunamadı.";
@@ -190,10 +183,5 @@ public class IftarVaktiBot extends TelegramLongPollingBot {
 	@Override
 	public String getBotToken() {
 		return config.getBotToken();
-	}
-
-	public void saveData() {
-		userManagement.saveMap();
-		service.saveCache();
 	}
 }

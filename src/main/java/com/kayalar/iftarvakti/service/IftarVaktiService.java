@@ -2,14 +2,18 @@ package com.kayalar.iftarvakti.service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 import org.apache.http.HttpException;
 
 import com.kayalar.iftarvakti.config.Configurations;
-import com.kayalar.iftarvakti.model.DayInfo;
+import com.kayalar.iftarvakti.model.DailyPrayTimes;
+import com.kayalar.iftarvakti.model.User;
 import com.kayalar.iftarvakti.requester.Requester;
 
 public class IftarVaktiService {
@@ -18,8 +22,8 @@ public class IftarVaktiService {
 	private Requester requester;
 	private static final String errorMessage = "Beklenmeyen sonuç. Daha sonra tekrar deneyiniz.";
 
-	public IftarVaktiService(Configurations config) {
-		cache = new Cache();
+	public IftarVaktiService(Configurations config) throws UnknownHostException {
+		cache = new Cache(config.getDbAdress(), config.getDbPort(), config.getDbName(), "city", "user");
 		requester = new Requester(config);
 	}
 
@@ -36,17 +40,17 @@ public class IftarVaktiService {
 			int tomorrowMonth = tomorrow.getMonthValue();
 			int tomorrowYear = tomorrow.getYear();
 
-			DayInfo todayInfo = cache.getIfExists(cityName);
+			DailyPrayTimes todayInfo = cache.getDailyPrayTimesIfExists(dateStr(), cityName);
 
 			if (todayInfo == null) {
 
-				DayInfo dayInfo = requester.requestForList(cityName);
+				DailyPrayTimes dayInfo = requester.requestForList(cityName);
 
 				// at least today and tomorrow is required
 				if (dayInfo == null)
 					return errorMessage;
 
-				cache.save(cityName, dayInfo);
+				cache.saveDailyPrayTimesForCity(cityName, dayInfo);
 
 				todayInfo = dayInfo;
 			}
@@ -59,7 +63,7 @@ public class IftarVaktiService {
 					todayInfo.getAksamHour(), todayInfo.getAksamMinute(), 0, 0, ZoneId.of(zoneId));
 
 			// bir kac dakikadan bisey olmaz. bugunku imsaka bakalım :)
-			// yarinki bu api de verilmiyor
+			// yarinki bu api de verilmiyor //TODO
 			ZonedDateTime tomorrowImsak = ZonedDateTime.of(tomorrowYear, tomorrowMonth, tomorrowDay,
 					todayInfo.getImsakHour(), todayInfo.getImsakMinute(), 0, 0, ZoneId.of(zoneId));
 
@@ -94,8 +98,12 @@ public class IftarVaktiService {
 		}
 	}
 
-	public Cache getCache() {
-		return cache;
+	public User getUser(int userId) {
+		return cache.getUser(userId);
+	}
+
+	public void saveUser(User user) {
+		cache.saveUser(user);
 	}
 
 	private String handSomeResultString(String type, int hour, int minute, int second, int pivotHour, int pivotMinute) {
@@ -123,8 +131,9 @@ public class IftarVaktiService {
 		return String.format("%s için kalan süre:\n%s\n%s vakti: %s", type, remainingStr, type, pivotStr);
 	}
 
-	public void saveCache() {
-		cache.saveCache();
-		cache = new Cache();
+	private String dateStr() {
+		Date now = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("yyyMMdd");
+		return format.format(now);
 	}
 }

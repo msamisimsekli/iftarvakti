@@ -1,12 +1,12 @@
-package com.kayalar.iftarvakti.user;
+package com.kayalar.iftarvakti.model;
 
-public class UserInfo {
+public class User {
 
 	private Integer userId;
 	private String city;
 	private Long chatId;
 
-	public UserInfo(Integer userId, String city, Long chatId) {
+	public User(Integer userId, String city, Long chatId) {
 		super();
 		this.userId = userId;
 		this.city = city;
