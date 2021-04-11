@@ -1,4 +1,4 @@
-package com.kayalar.iftarvakti.requester;
+package com.kayalar.iftarvakti.http;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -20,7 +20,7 @@ import com.google.gson.JsonParser;
 import com.kayalar.iftarvakti.config.Configurations;
 import com.kayalar.iftarvakti.model.DailyPrayTimes;
 
-public class Requester {
+public class DailyPrayInfoRequester {
 
 	private CloseableHttpClient httpClient;
 	private JsonParser jsonParser;
@@ -28,7 +28,7 @@ public class Requester {
 	private String apiAdress;
 	private String apiToken;
 
-	public Requester(Configurations config) {
+	public DailyPrayInfoRequester(Configurations config) {
 		httpClient = HttpClients.createDefault();
 		jsonParser = new JsonParser();
 

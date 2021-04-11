@@ -1,5 +1,6 @@
 package com.kayalar.iftarvakti.model;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,5 +18,9 @@ public class Users {
 
 	public void addUser(User user) {
 		userMap.put(user.getUserId(), user);
+	}
+	
+	public Collection<User> getUsers() {
+		return userMap.values();
 	}
 }
